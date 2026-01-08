@@ -6,6 +6,15 @@ A simple, mobile-friendly Progressive Web App (PWA) to help patients and caregiv
 
 ---
 
+## What This Is For
+
+- Older adults who have many daily medications and want a simple checklist.
+- People with chronic conditions (e.g. cancer, heart, kidney disease) juggling complex schedules.
+- Family members or caregivers who help someone else remember what to take and when.
+- Tracking pill counts and knowing when it may be time to request a refill.
+
+---
+
 ## Features (MVP)
 
 - Add medications with:
