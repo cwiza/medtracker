@@ -46,9 +46,7 @@ export default function MedCard({ med, onEdit, onDelete, caregiverMode, fontSize
   const canDelete = Boolean(caregiverMode && onDelete);
 
   return (
-    <div
-      className={`flex flex-col gap-2 rounded-2xl border-l-4 ${styles.border} ${styles.bg} p-4 shadow-sm`}
-    >
+    <div className="rounded-[10px] bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-slate-50">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="mb-1 flex items-center gap-2">
@@ -58,20 +56,20 @@ export default function MedCard({ med, onEdit, onDelete, caregiverMode, fontSize
               {med.priority || 'routine'}
             </span>
           </div>
-          <div className={`${getNameClass(fontSize)} font-semibold text-gray-900`}>
+          <div className={`${getNameClass(fontSize)} font-bold text-slate-800`}>
             {med.name}
           </div>
-          <div className={`${getDoseClass(fontSize)} font-bold text-blue-700`}>
+          <div className={`${getDoseClass(fontSize)} font-semibold text-slate-400`}>
             {med.dose}
           </div>
-          <div className="mt-1 text-sm text-gray-700">
+          <div className="mt-1 text-sm font-medium text-slate-400">
             {med.frequency === 'daily' && 'Daily'}
             {med.frequency === 'every-other-day' && 'Every other day'}
             {med.frequency === 'specific-days' && med.daysOfWeek?.join(', ')}
             {med.frequency === 'custom' && (med.customFrequency || 'Custom schedule')}
           </div>
           {Array.isArray(med.times) && med.times.length > 0 && (
-            <div className="mt-1 text-sm text-gray-600">
+            <div className="mt-1 text-sm text-slate-400">
               Times:{' '}
               {med.times.map((t, index) => formatClockTime(t)).join(', ')}
             </div>

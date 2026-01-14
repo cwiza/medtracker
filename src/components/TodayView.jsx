@@ -80,6 +80,17 @@ function getDoseClass(fontSize) {
   return 'text-lg';
 }
 
+function getFrequencyLabel(med) {
+  if (!med) return '';
+  if (med.frequency === 'daily') return 'Daily';
+  if (med.frequency === 'every-other-day') return 'Every other day';
+  if (med.frequency === 'specific-days' && Array.isArray(med.daysOfWeek)) {
+    return med.daysOfWeek.join(', ');
+  }
+  if (med.frequency === 'custom') return med.customFrequency || 'Custom schedule';
+  return '';
+}
+
 export default function TodayView({ medications, takenLog, onTake, onUndo, fontSize = 'normal' }) {
   const [openIds, setOpenIds] = useState({});
 
@@ -102,6 +113,16 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
     entries.sort((a, b) => (a.scheduledTime > b.scheduledTime ? 1 : -1));
     return entries;
   }, [medications, today]);
+
+  const totalDoses = schedule.length;
+  const takenCount = schedule.filter((entry) =>
+    takenLog.some(
+      (log) =>
+        log.medId === entry.med.id &&
+        log.scheduledTime === entry.scheduledTime &&
+        log.date === todayKey,
+    ),
+  ).length;
 
   function isTaken(entry) {
     return takenLog.some(
@@ -181,22 +202,29 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
     );
   }
 
+  const progressAngle = totalDoses > 0 ? (takenCount / totalDoses) * 360 : 0;
+
   return (
     <div className="space-y-4 pb-20">
-      <div className="flex items-center justify-between gap-3 rounded-2xl bg-white px-4 py-3 text-sm shadow-sm">
-        <div className="text-left">
-          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-            Today
-          </p>
-          <p className="text-base text-gray-800">Tap a medicine when you take it.</p>
+      <div className="sticky top-[64px] z-10">
+        <div className="flex flex-col items-center justify-center rounded-[10px] bg-[#eef7f4] px-5 py-4 text-center text-slate-900">
+          <div className="relative flex h-28 w-28 items-center justify-center">
+            <div className="absolute inset-0 rounded-full bg-white" />
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: `conic-gradient(#4dbd91 ${progressAngle}deg, #d1e9e2 0deg)` ,
+                maskImage: 'radial-gradient(transparent 58%, black 60%)',
+                WebkitMaskImage: 'radial-gradient(transparent 58%, black 60%)',
+              }}
+            />
+            <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white text-center text-xl font-bold text-slate-800 shadow-[0_14px_35px_rgba(15,23,42,0.18)]">
+              <span>
+                {takenCount}/{totalDoses}
+              </span>
+            </div>
+          </div>
         </div>
-        <button
-          type="button"
-          onClick={handleSpeak}
-          className="min-h-[40px] rounded-full bg-blue-600 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-blue-700"
-        >
-          {canSpeak && window.speechSynthesis.speaking ? 'Stop voice' : 'Read aloud'}
-        </button>
       </div>
       {schedule.map((entry, index) => {
         const { med, scheduledTime } = entry;
@@ -207,51 +235,51 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
         const lowStock = typeof med.pillsRemaining === 'number' && med.pillsRemaining < 10;
         const timeOfDay = getTimeOfDayInfo(scheduledTime);
         const timeOfDayChip = timeOfDayClasses(timeOfDay.key);
+        const priorityLabel = (med.priority || 'routine').toLowerCase();
 
         return (
           <div
             key={id}
-            className={`flex flex-col gap-2 rounded-2xl border-l-4 ${styles.border} ${styles.bg} p-4 shadow-sm`}
+            className="rounded-[10px] bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-slate-50"
           >
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex-1">
-                <div className="mb-1 flex flex-wrap items-center gap-2">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <div className="mb-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
                   <span
-                    className={`rounded-full px-2 py-1 text-xs font-semibold uppercase tracking-wide ${styles.badgeBg} ${styles.badgeText}`}
-                  >
-                    {med.priority || 'routine'}
-                  </span>
-                  <span className="rounded-full bg-gray-900 px-2 py-1 text-xs font-semibold text-white">
-                    {formatClockTime(scheduledTime)}
-                  </span>
-                  <span className="rounded-full bg-gray-200 px-2 py-1 text-xs font-medium text-gray-800">
-                    {getTimeWindowLabel(scheduledTime)}
-                  </span>
-                  <span
-                    className={`rounded-full border px-2 py-1 text-xs font-semibold ${timeOfDayChip}`}
+                    className={`rounded-full border px-2 py-1 text-[11px] font-medium ${timeOfDayChip}`}
                   >
                     {timeOfDay.label}
                   </span>
+                  <span
+                    className={`rounded-full px-2 py-1 text-[11px] font-semibold uppercase tracking-wide ${styles.badgeBg} ${styles.badgeText}`}
+                  >
+                    {priorityLabel === 'critical' && 'Critical'}
+                    {priorityLabel === 'important' && 'Important'}
+                    {priorityLabel === 'routine' && 'Routine'}
+                    {!['critical', 'important', 'routine'].includes(priorityLabel) && 'Routine'}
+                  </span>
                 </div>
-                <div className={`${getNameClass(fontSize)} font-semibold text-gray-900`}>
+                <div className={`${getNameClass(fontSize)} font-bold text-slate-800`}>
                   {med.name}
                 </div>
-                <div className={`${getDoseClass(fontSize)} font-bold text-blue-700`}>
+                <div className={`${getDoseClass(fontSize)} font-semibold text-slate-400`}>
                   {med.dose}
                 </div>
+                <p className="mt-1 text-sm font-medium text-slate-400">
+                  {getFrequencyLabel(med)}
+                  {getFrequencyLabel(med) && ' · '}
+                  {formatClockTime(scheduledTime)}
+                </p>
                 {med.instructions && (
-                  <p className="mt-1 text-sm text-gray-800">
-                    <span className="font-semibold">Instructions: </span>
-                    {med.instructions}
-                  </p>
+                  <p className="mt-1 text-xs text-slate-500">{med.instructions}</p>
                 )}
               </div>
 
-              <div className="flex flex-col items-end gap-2">
+              <div className="flex flex-col items-end gap-2 self-stretch justify-center text-right">
                 {taken ? (
                   <>
-                    <span className="inline-flex min-h-[32px] items-center rounded-full bg-green-600 px-3 py-1 text-xs font-semibold text-white">
-                      Taken at{' '}
+                    <span className="inline-flex min-h-[32px] items-center rounded-full bg-[#e9f7f2] px-4 py-1 text-xs font-bold text-[#4dbd91]">
+                      Taken ·{' '}
                       {takenEntry?.takenAt
                         ? new Date(takenEntry.takenAt).toLocaleTimeString(undefined, {
                             hour: 'numeric',
@@ -262,7 +290,7 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
                     <button
                       type="button"
                       onClick={() => onUndo(med, scheduledTime)}
-                      className="min-h-[32px] rounded-full border border-gray-300 px-3 py-1 text-xs font-medium text-gray-800"
+                      className="min-h-[32px] rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-500"
                     >
                       Undo
                     </button>
@@ -271,16 +299,16 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
                   <button
                     type="button"
                     onClick={() => onTake(med, scheduledTime)}
-                    className="min-h-[44px] rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
+                    className="min-h-[40px] rounded-full bg-[#4a80f0] px-5 py-2 text-sm font-bold text-white shadow-md shadow-blue-200"
                   >
-                    Take
+                    Mark as taken
                   </button>
                 )}
 
                 <button
                   type="button"
                   onClick={() => toggleOpen(id)}
-                  className="text-xs font-medium text-blue-700"
+                  className="text-[11px] font-medium text-[#4a80f0]"
                 >
                   {openIds[id] ? 'Hide details' : 'More info'}
                 </button>
