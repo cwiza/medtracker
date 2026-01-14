@@ -208,7 +208,7 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
     <div className="space-y-4 pb-20">
       <div className="sticky top-[64px] z-10">
         <div className="flex flex-col items-center justify-center rounded-[10px] bg-[#eef7f4] px-5 py-4 text-center text-slate-900">
-          <div className="relative flex h-28 w-28 items-center justify-center">
+          <div className="relative flex h-56 w-56 items-center justify-center">
             <div className="absolute inset-0 rounded-full bg-white" />
             <div
               className="absolute inset-0 rounded-full"
@@ -218,7 +218,7 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
                 WebkitMaskImage: 'radial-gradient(transparent 58%, black 60%)',
               }}
             />
-            <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white text-center text-xl font-bold text-slate-800 shadow-[0_14px_35px_rgba(15,23,42,0.18)]">
+            <div className="relative flex h-48 w-48 items-center justify-center rounded-full bg-white text-center text-xl font-bold text-slate-800 shadow-[0_14px_35px_rgba(15,23,42,0.18)]">
               <span>
                 {takenCount}/{totalDoses}
               </span>
