@@ -307,10 +307,9 @@ export default function App() {
   }
 
   return (
-    <div
-      <div className={`mx-auto flex min-h-screen max-w-xl flex-col bg-[#d1ede5] ${
-        fontSize === 'large' ? 'text-lg' : fontSize === 'extra' ? 'text-xl' : 'text-base'
-      }`}
+    <div className={`mx-auto flex min-h-screen max-w-xl flex-col bg-[#d1ede5] ${
+      fontSize === 'large' ? 'text-lg' : fontSize === 'extra' ? 'text-xl' : 'text-base'
+    }`}
     >
       <header className="sticky top-0 z-20 bg-[#d1ede5]/90 px-4 pt-3 pb-2 backdrop-blur">
         <div className="flex items-center justify-center">
