@@ -214,7 +214,7 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
             <div
               className="absolute inset-0 rounded-full"
               style={{
-                background: `conic-gradient(#4dbd91 ${progressAngle}deg, #d1e9e2 0deg)` ,
+                background: `conic-gradient(#4dbd91 ${progressAngle}deg, #e4f5ed 0deg)` ,
                 maskImage: 'radial-gradient(transparent 58%, black 60%)',
                 WebkitMaskImage: 'radial-gradient(transparent 58%, black 60%)',
               }}
