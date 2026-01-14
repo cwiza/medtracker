@@ -1,4 +1,4 @@
-# Med Tracker
+# MedTracker Glasmorphism
 
 A simple, mobile-friendly Progressive Web App (PWA) to help patients and caregivers manage complex medication schedules. Built with React, Tailwind CSS, and localStorage (no backend).
 

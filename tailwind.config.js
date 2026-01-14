@@ -5,7 +5,7 @@ export default {
     extend: {
       fontSize: {
         'med-name': '1.125rem', // 18px
-        'med-dose': '1.5rem',   // 24px
+        'med-dose': '1.5rem', // 24px
       },
     },
   },

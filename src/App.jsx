@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import TodayView from './components/TodayView.jsx';
 import AllMedsView from './components/AllMedsView.jsx';
+import HistoryView from './components/HistoryView.jsx';
+import SettingsView from './components/SettingsView.jsx';
 import MedForm from './components/MedForm.jsx';
 import { loadMedications, saveMedications, loadTakenLog, saveTakenLog } from './utils/storage.js';
 
@@ -15,52 +17,52 @@ function getSampleMedications() {
   return [
     {
       id: baseId + 1,
-      name: 'Morning chemo tablet',
-      dose: '400 mg',
+      name: 'Morning multivitamin',
+      dose: '1 tablet',
       frequency: 'daily',
       times: ['08:00'],
       daysOfWeek: [],
       customFrequency: '',
-      doctor: 'Dr. Lee (Oncology)',
+      doctor: 'Dr. Rivera (Primary Care)',
       priority: 'critical',
-      instructions: 'Take with a full glass of water. Stay upright for 30 minutes.',
-      pillsRemaining: 18,
+      instructions: 'Take with a full glass of water after breakfast.',
+      pillsRemaining: 30,
       refillable: true,
-      notes: 'Call the clinic if you notice severe nausea, rash, or bleeding.',
+      notes: 'General daily vitamin. Stop and call your doctor if you notice anything unusual.',
     },
     {
       id: baseId + 2,
-      name: 'Anti-nausea pill',
-      dose: '8 mg',
+      name: 'Stomach comfort tablet',
+      dose: '1 tablet',
       frequency: 'specific-days',
       times: ['07:30'],
       daysOfWeek: ['Mon', 'Wed', 'Fri'],
       customFrequency: '',
-      doctor: 'Dr. Lee (Oncology)',
+      doctor: 'Dr. Rivera (Primary Care)',
       priority: 'important',
-      instructions: 'Take 30 minutes before chemo tablet. Take with a light snack.',
-      pillsRemaining: 9,
+      instructions: 'Take with a small snack if your stomach feels uneasy.',
+      pillsRemaining: 12,
       refillable: true,
-      notes: 'Helps with chemo-related nausea.',
+      notes: 'For occasional stomach upset as advised by your doctor.',
     },
     {
       id: baseId + 3,
-      name: 'Phosphate binder',
-      dose: '1 tablet',
+      name: 'Lunch-time digestive aid',
+      dose: '1 capsule',
       frequency: 'daily',
       times: ['12:00', '18:00'],
       daysOfWeek: [],
       customFrequency: '',
-      doctor: 'Dr. Patel (Nephrology)',
+      doctor: 'Dr. Chen (Gastroenterology)',
       priority: 'critical',
-      instructions: 'Take with meals. Do not skip when eating.',
-      pillsRemaining: 24,
+      instructions: 'Take with meals. Swallow whole with water.',
+      pillsRemaining: 20,
       refillable: true,
-      notes: 'For chronic kidney disease / dialysis support.',
+      notes: 'Supports comfortable digestion with meals.',
     },
     {
       id: baseId + 4,
-      name: 'Blood pressure pill',
+      name: 'Blood pressure tablet',
       dose: '10 mg',
       frequency: 'daily',
       times: ['09:00'],
@@ -75,22 +77,22 @@ function getSampleMedications() {
     },
     {
       id: baseId + 5,
-      name: 'Evening water pill',
+      name: 'Evening fluid tablet',
       dose: '20 mg',
       frequency: 'every-other-day',
       times: ['19:00'],
       daysOfWeek: [],
       customFrequency: '',
-      doctor: 'Dr. Patel (Nephrology)',
+      doctor: 'Dr. Kim (Cardiology)',
       priority: 'important',
       instructions: 'Take early enough to avoid nighttime trips to the bathroom.',
       pillsRemaining: 8,
       refillable: true,
-      notes: 'Helps remove extra fluid. Call doctor if swelling increases.',
+      notes: 'Helps manage fluid balance as advised by your doctor.',
     },
     {
       id: baseId + 6,
-      name: 'Cholesterol pill',
+      name: 'Cholesterol tablet',
       dose: '40 mg',
       frequency: 'daily',
       times: ['21:30'],
@@ -101,9 +103,27 @@ function getSampleMedications() {
       instructions: 'Take in the evening. May take with or without food.',
       pillsRemaining: 28,
       refillable: true,
-      notes: 'For long-term heart protection.',
+      notes: 'For long-term heart and cholesterol management.',
     },
   ];
+}
+
+function BottomNavItem({ label, icon, active, onClick }) {
+  const activeClasses = active ? 'text-[#4a80f0]' : 'text-slate-400';
+  const iconBgClasses = active ? 'bg-[#4a80f0] text-white' : 'bg-slate-200 text-slate-500';
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex flex-col items-center gap-1 text-[10px] font-bold uppercase tracking-tight ${activeClasses}`}
+    >
+      <div className={`flex h-8 w-8 items-center justify-center rounded-full text-base ${iconBgClasses}`}>
+        <span aria-hidden="true">{icon}</span>
+      </div>
+      <span>{label}</span>
+    </button>
+  );
 }
 
 export default function App() {
@@ -247,6 +267,14 @@ export default function App() {
     setCaregiverConfirm('');
   }
 
+  function handleCaregiverButtonClick() {
+    if (caregiverMode) {
+      setCaregiverMode(false);
+    } else {
+      openCaregiverDialog();
+    }
+  }
+
   function handleCaregiverSubmit(event) {
     event.preventDefault();
 
@@ -279,96 +307,21 @@ export default function App() {
   }
 
   return (
-    <div
-      className={`mx-auto flex min-h-screen max-w-xl flex-col bg-gray-100 ${
-        fontSize === 'large' ? 'text-lg' : fontSize === 'extra' ? 'text-xl' : 'text-base'
-      }`}
+    <div className={`mx-auto flex min-h-screen max-w-xl flex-col bg-[#d1ede5] ${
+      fontSize === 'large' ? 'text-lg' : fontSize === 'extra' ? 'text-xl' : 'text-base'
+    }`}
     >
-      <header className="sticky top-0 z-20 border-b border-gray-200 bg-white/95 px-4 pt-4 pb-2 shadow-sm backdrop-blur">
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Med Tracker</h1>
-            <p className="text-xs text-gray-600">Simple medication schedule for your day</p>
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            <button
-              type="button"
-              onClick={caregiverMode ? () => setCaregiverMode(false) : openCaregiverDialog}
-              className={`min-h-[32px] rounded-full border px-3 py-1 text-[11px] font-semibold ${
-                caregiverMode
-                  ? 'border-green-600 bg-green-600 text-white'
-                  : 'border-gray-300 bg-white text-gray-800'
-              }`}
-            >
-              {caregiverMode ? 'Caregiver: ON' : 'Caregiver'}
-            </button>
-            <div className="inline-flex items-center gap-1 rounded-full bg-gray-100 p-1 text-[11px]">
-              <span className="px-1 text-[10px] text-gray-600">Text size</span>
-              <button
-                type="button"
-                onClick={() => handleFontSizeChange('normal')}
-                className={`min-h-[28px] rounded-full px-2 py-1 font-semibold ${
-                  fontSize === 'normal'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-800 shadow-sm'
-                }`}
-              >
-                A
-              </button>
-              <button
-                type="button"
-                onClick={() => handleFontSizeChange('large')}
-                className={`min-h-[28px] rounded-full px-2 py-1 font-semibold ${
-                  fontSize === 'large'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-800 shadow-sm'
-                }`}
-              >
-                A+
-              </button>
-              <button
-                type="button"
-                onClick={() => handleFontSizeChange('extra')}
-                className={`min-h-[28px] rounded-full px-2 py-1 font-semibold ${
-                  fontSize === 'extra'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-800 shadow-sm'
-                }`}
-              >
-                A++
-              </button>
-            </div>
+      <header className="sticky top-0 z-20 bg-[#d1ede5]/90 px-4 pt-3 pb-2 backdrop-blur">
+        <div className="flex items-center justify-center">
+          <div className="flex flex-col items-center">
+            <h1 className="text-lg font-semibold text-slate-900">MedTracker</h1>
+            <p className="text-[11px] text-slate-500">Simple daily medication tracker</p>
           </div>
         </div>
-
-        <nav className="mt-1 grid grid-cols-2 gap-2 rounded-full bg-gray-100 p-1 text-sm">
-          <button
-            type="button"
-            onClick={() => setActiveTab('today')}
-            className={`min-h-[44px] rounded-full px-3 py-2 font-semibold ${
-              activeTab === 'today'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-transparent text-gray-700'
-            }`}
-          >
-            Today's Schedule
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('all')}
-            className={`min-h-[44px] rounded-full px-3 py-2 font-semibold ${
-              activeTab === 'all'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-transparent text-gray-700'
-            }`}
-          >
-            All Medications
-          </button>
-        </nav>
       </header>
 
-      <main className="flex-1 px-4 pt-3 pb-6">
-        {activeTab === 'today' ? (
+      <main className="flex-1 px-4 pt-3 pb-8">
+        {activeTab === 'today' && (
           <TodayView
             medications={medications}
             takenLog={takenLog}
@@ -376,7 +329,8 @@ export default function App() {
             onUndo={handleUndo}
             fontSize={fontSize}
           />
-        ) : (
+        )}
+        {activeTab === 'all' && (
           <AllMedsView
             medications={medications}
             onEdit={handleEditMed}
@@ -385,12 +339,23 @@ export default function App() {
             fontSize={fontSize}
           />
         )}
+        {activeTab === 'history' && (
+          <HistoryView medications={medications} takenLog={takenLog} />
+        )}
+        {activeTab === 'settings' && (
+          <SettingsView
+            caregiverMode={caregiverMode}
+            onCaregiverButtonClick={handleCaregiverButtonClick}
+            fontSize={fontSize}
+            onFontSizeChange={handleFontSizeChange}
+          />
+        )}
       </main>
 
       <button
         type="button"
         onClick={openAddForm}
-        className="fixed bottom-6 right-6 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-3xl font-bold text-white shadow-lg hover:bg-blue-700"
+        className="fixed bottom-20 right-6 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-[#4a80f0] text-3xl font-bold text-white shadow-lg hover:bg-blue-700"
         aria-label="Add medication"
       >
         +
@@ -468,6 +433,35 @@ export default function App() {
           </div>
         </div>
       )}
+
+      <nav className="fixed bottom-0 left-0 right-0 z-20 border-t border-slate-200 bg-white/80 px-4 py-3 shadow-[0_-4px_20px_rgba(15,23,42,0.08)] backdrop-blur">
+        <div className="mx-auto flex max-w-xl items-center justify-around">
+          <BottomNavItem
+            label="Today"
+            icon="☀️"
+            active={activeTab === 'today'}
+            onClick={() => setActiveTab('today')}
+          />
+          <BottomNavItem
+            label="Meds"
+            icon="💊"
+            active={activeTab === 'all'}
+            onClick={() => setActiveTab('all')}
+          />
+          <BottomNavItem
+            label="History"
+            icon="📅"
+            active={activeTab === 'history'}
+            onClick={() => setActiveTab('history')}
+          />
+          <BottomNavItem
+            label="Settings"
+            icon="⚙️"
+            active={activeTab === 'settings'}
+            onClick={() => setActiveTab('settings')}
+          />
+        </div>
+      </nav>
 
       <footer className="mt-auto px-4 pb-4 pt-2 text-center text-[11px] text-gray-500">
         <p>
