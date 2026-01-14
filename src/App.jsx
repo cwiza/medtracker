@@ -313,21 +313,12 @@ export default function App() {
       }`}
     >
       <header className="sticky top-0 z-20 bg-[#eef7f4]/90 px-4 pt-3 pb-2 backdrop-blur">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
+        <div className="flex items-center justify-center">
+          <div className="flex flex-col items-center">
             <h1 className="text-lg font-semibold text-slate-900">MedTracker</h1>
             <p className="text-[11px] text-slate-500">Simple daily medication tracker</p>
           </div>
-          <div className="flex flex-col items-start text-[11px] text-slate-600">
-            <p className="text-[10px] font-semibold uppercase tracking-wide opacity-80">Today</p>
-            <p className="font-semibold">
-              {new Date().toLocaleDateString(undefined, {
-                weekday: 'long',
-                month: 'short',
-                day: 'numeric',
-              })}
-            </p>
-          </div>
+        </div>
         </div>
       </header>
 

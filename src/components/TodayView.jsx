@@ -203,11 +203,12 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
   }
 
   const progressAngle = totalDoses > 0 ? (takenCount / totalDoses) * 360 : 0;
+  const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
   return (
     <div className="space-y-4 pb-20">
       <div className="sticky top-[64px] z-10">
-        <div className="flex flex-col items-center justify-center rounded-[10px] bg-[#eef7f4] px-5 py-4 text-center text-slate-900">
+        <div className="flex flex-col items-center justify-center rounded-[10px] bg-[#d1ede5] px-5 py-4 text-center text-slate-900">
           <div className="relative flex h-56 w-56 items-center justify-center">
             <div className="absolute inset-0 rounded-full bg-white" />
             <div
@@ -218,10 +219,10 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
                 WebkitMaskImage: 'radial-gradient(transparent 58%, black 60%)',
               }}
             />
-            <div className="relative flex h-48 w-48 items-center justify-center rounded-full bg-white text-center text-4xl font-bold text-slate-800 shadow-[0_14px_35px_rgba(15,23,42,0.18)]">
-              <span>
-                {takenCount}/{totalDoses}
-              </span>
+            <div className="relative flex h-48 w-48 flex-col items-center justify-center rounded-full bg-white text-center text-slate-800 shadow-[0_14px_35px_rgba(15,23,42,0.18)]">
+              <div className="text-lg font-semibold">Today</div>
+              <div className="text-4xl font-bold">{takenCount}/{totalDoses}</div>
+              <div className="text-sm">{today}</div>
             </div>
           </div>
         </div>
