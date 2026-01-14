@@ -118,7 +118,7 @@ function BottomNavItem({ label, icon, active, onClick }) {
       onClick={onClick}
       className={`flex flex-col items-center gap-1 text-[10px] font-bold uppercase tracking-tight ${activeClasses}`}
     >
-      <div className={`flex h-7 w-7 items-center justify-center rounded-full text-base ${iconBgClasses}`}>
+      <div className={`flex h-8 w-8 items-center justify-center rounded-full text-base ${iconBgClasses}`}>
         <span aria-hidden="true">{icon}</span>
       </div>
       <span>{label}</span>
@@ -308,11 +308,11 @@ export default function App() {
 
   return (
     <div
-      className={`mx-auto flex min-h-screen max-w-xl flex-col bg-[#eef7f4] ${
+      <div className={`mx-auto flex min-h-screen max-w-xl flex-col bg-[#d1ede5] ${
         fontSize === 'large' ? 'text-lg' : fontSize === 'extra' ? 'text-xl' : 'text-base'
       }`}
     >
-      <header className="sticky top-0 z-20 bg-[#eef7f4]/90 px-4 pt-3 pb-2 backdrop-blur">
+      <header className="sticky top-0 z-20 bg-[#d1ede5]/90 px-4 pt-3 pb-2 backdrop-blur">
         <div className="flex items-center justify-center">
           <div className="flex flex-col items-center">
             <h1 className="text-lg font-semibold text-slate-900">MedTracker</h1>
@@ -436,7 +436,7 @@ export default function App() {
       )}
 
       <nav className="fixed bottom-0 left-0 right-0 z-20 border-t border-slate-200 bg-white/80 px-4 py-3 shadow-[0_-4px_20px_rgba(15,23,42,0.08)] backdrop-blur">
-        <div className="mx-auto flex max-w-xl items-center justify-between">
+        <div className="mx-auto flex max-w-xl items-center justify-around">
           <BottomNavItem
             label="Today"
             icon="☀️"
