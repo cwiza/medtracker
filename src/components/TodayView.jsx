@@ -203,7 +203,7 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
   }
 
   const progressAngle = totalDoses > 0 ? (takenCount / totalDoses) * 360 : 0;
-  const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const currentDate = 'January 13, 2026';
 
   return (
     <div className="space-y-4 pb-20">
@@ -222,7 +222,7 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
             <div className="relative flex h-48 w-48 flex-col items-center justify-center rounded-full bg-white text-center text-slate-800 shadow-[0_14px_35px_rgba(15,23,42,0.18)]">
               <div className="text-lg font-semibold">Today</div>
               <div className="text-4xl font-bold">{takenCount}/{totalDoses}</div>
-              <div className="text-sm">{today}</div>
+              <div className="text-sm">{currentDate}</div>
             </div>
           </div>
         </div>

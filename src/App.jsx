@@ -319,7 +319,6 @@ export default function App() {
             <p className="text-[11px] text-slate-500">Simple daily medication tracker</p>
           </div>
         </div>
-        </div>
       </header>
 
       <main className="flex-1 px-4 pt-3 pb-8">
@@ -436,7 +435,7 @@ export default function App() {
         </div>
       )}
 
-      <nav className="fixed bottom-0 left-0 right-0 z-20 border-t border-slate-200 bg-white/80 px-6 py-3 shadow-[0_-4px_20px_rgba(15,23,42,0.08)] backdrop-blur">
+      <nav className="fixed bottom-0 left-0 right-0 z-20 border-t border-slate-200 bg-white/80 px-4 py-3 shadow-[0_-4px_20px_rgba(15,23,42,0.08)] backdrop-blur">
         <div className="mx-auto flex max-w-xl items-center justify-between">
           <BottomNavItem
             label="Today"
