@@ -241,7 +241,7 @@ export default function TodayView({ medications, takenLog, onTake, onUndo, fontS
         return (
           <div
             key={id}
-            className={`rounded-[10px] bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.04)] border-2 ${taken ? 'border-gray-300' : 'border-green-200'}`}
+            className={`rounded-[10px] bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.04)] border-2 ${taken ? 'border-gray-300' : 'border-[#e4f6ef]'}`}
           >
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0 flex-1">
